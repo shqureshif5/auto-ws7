@@ -5,11 +5,14 @@
   gather_facts: false
 
   vars:
+  - "virtual": "10.13.0.44"
 
   vars_files:
   - ../credentials/bigip_creds.yaml
 
   tasks:
+  - set_fact:
+      as3_body: "{{ lookup('template', './as3.j2', split_lines=False) }}"
 
   - name: Deploy an AS3 declaration
     uri:
@@ -17,7 +20,7 @@
       user: "{{username}}"
       password: "{{password}}"
       method: POST
-      body: "{{ lookup('file','as3.json') }}"
+      body: "{{ as3_body }}"
       force_basic_auth: true
       status_code: 200
       body_format: json
